@@ -18,6 +18,8 @@ Application web moderne et complète pour la gestion d'une école privée, déve
 - 🔄 **API REST complète** - CRUD pour toutes les entités
 - 📊 **Documentation automatique** - Swagger UI intégrée
 - 🐳 **Conteneurisation** - Docker et Docker Compose
+- 🎭 **Données fictives** - Génération automatique avec Faker
+- 🛠️ **Scripts utilitaires** - Peuplement, nettoyage et reset de la DB
 
 ### 🚧 En développement
 - 🎨 **Interface Angular** - Frontend moderne et responsive
@@ -99,7 +101,15 @@ ecole-prive-AI/
    docker-compose up -d backend
    ```
 
-3. **Vérifier l'installation**
+3. **Peupler la base avec des données fictives**
+   ```bash
+   # Générer des données de test avec Faker
+   make seed
+   # ou
+   docker-compose exec backend python seed.py
+   ```
+
+4. **Vérifier l'installation**
    ```bash
    # Test de l'API
    curl http://localhost:8000
@@ -115,7 +125,22 @@ ecole-prive-AI/
 | 🔗 API Backend | http://localhost:8000 | API REST FastAPI |
 | 📚 Documentation | http://localhost:8000/docs | Swagger UI |
 | 🗄️ Base de données | localhost:5432 | PostgreSQL |
+| 🖥️ pgAdmin | http://localhost:5050 | Interface web PostgreSQL |
 | 🎨 Frontend | http://localhost:4200 | Angular (à venir) |
+
+## 🎭 Données fictives générées
+
+Le script de peuplement crée automatiquement :
+
+- **1 administrateur** : `admin@ecole-prive.fr` / `admin123`
+- **15 enseignants** avec profils complets et spécialisations
+- **100 étudiants** avec informations personnelles et contacts parents
+- **50 parents** avec coordonnées
+- **23 classes** (primaire, collège, lycée) avec sections
+- **183 matières** assignées aux classes avec enseignants
+- **100 inscriptions** d'étudiants dans les classes
+
+Toutes les données sont générées avec **Faker** en français pour un réalisme optimal.
 
 ## 📖 API Endpoints
 
@@ -184,6 +209,54 @@ docker-compose exec postgres psql -U ecole_user -d ecole_db
 docker-compose exec postgres pg_dump -U ecole_user ecole_db > backup.sql
 ```
 
+### Données fictives (Faker)
+```bash
+# Peupler avec des données de test
+make seed
+
+# Vider la base de données
+make clear
+
+# Réinitialiser complètement (vider + repeupler)
+make reset
+
+# Installation complète (build + up + seed)
+make install
+```
+
+### Interface pgAdmin
+```bash
+# Démarrer pgAdmin
+make pgadmin
+
+# Accéder à l'interface web
+# URL: http://localhost:5050
+# Email: admin@ecole-prive.fr
+# Mot de passe: admin123
+```
+
+### Makefile - Commandes disponibles
+```bash
+# Afficher l'aide
+make help
+
+# Services Docker
+make up          # Démarrer tous les services
+make down        # Arrêter tous les services
+make restart     # Redémarrer le backend
+make logs        # Voir les logs du backend
+
+# Base de données
+make seed        # Peupler avec des données fictives
+make clear       # Vider la base de données
+make reset       # Réinitialiser (vider + repeupler)
+
+# Développement
+make shell       # Accéder au shell du conteneur backend
+make db-shell    # Accéder au shell PostgreSQL
+make status      # Afficher le statut des services
+```
+
 ## 🧪 Tests
 
 ```bash
@@ -200,6 +273,7 @@ ng test
 
 - 📖 [**Documentation technique**](./DOCUMENTATION.md) - Architecture et implémentation
 - 📝 [**Guide développeur**](./DEVELOPMENT_GUIDE.md) - Instructions pour contribuer
+- 🗄️ [**Guide d'accès aux données**](./DATABASE_ACCESS_GUIDE.md) - pgAdmin et PostgreSQL
 - 📋 [**Changelog**](./CHANGELOG.md) - Historique des modifications
 - 🔗 [**API Documentation**](http://localhost:8000/docs) - Swagger UI en direct
 

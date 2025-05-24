@@ -34,6 +34,21 @@ services:
     networks:
       - ecole_network
 
+  # pgAdmin pour l'interface web PostgreSQL
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ecole_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@ecole-prive.fr
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - ecole_network
+
   # Frontend Angular (sera ajouté plus tard)
   # frontend:
   #   build: ./frontend

@@ -8,9 +8,36 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Non publié]
 
 ### En cours
-- Résolution des imports de modèles SQLAlchemy
-- Tests des endpoints API
 - Développement du frontend Angular
+- Tests unitaires et d'intégration
+- Configuration Kubernetes pour le déploiement
+
+## [0.2.0] - 2024-01-XX
+
+### Ajouté
+- **Système de génération de données fictives** avec Faker
+  - Script `seed_data.py` pour créer des données réalistes
+  - Génération automatique de 15 enseignants, 100 étudiants, 50 parents
+  - Création de 23 classes (primaire, collège, lycée)
+  - 183 matières avec attribution aux classes et enseignants
+  - 100 inscriptions d'étudiants dans les classes
+  - Compte administrateur par défaut (admin@ecole-prive.fr / admin123)
+- **Scripts utilitaires** pour la gestion de la base de données
+  - `clear_data.py` : Vider la base de données
+  - `reset_db.py` : Réinitialiser complètement (vider + repeupler)
+  - `seed.py` : Script d'exécution du peuplement
+- **Makefile** avec commandes simplifiées
+  - `make seed` : Peupler avec des données fictives
+  - `make clear` : Vider la base de données
+  - `make reset` : Réinitialiser complètement
+  - `make install` : Installation complète (build + up + seed)
+  - Commandes Docker et développement
+- **Données en français** générées avec Faker locale française
+
+### Technique
+- Faker 20.1.0 pour la génération de données
+- Scripts Python pour la gestion de la base
+- Makefile pour l'automatisation des tâches
 
 ## [0.1.0] - 2024-01-XX
 
@@ -46,10 +73,34 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Commits détaillés
 
+### [2e44a7e] - feat: Ajout du système de génération de données fictives avec Faker
+```
+- Ajout de faker==20.1.0 aux dépendances
+- Script seed_data.py pour générer des données réalistes
+- Création automatique d'un admin (admin@ecole-prive.fr / admin123)
+- Génération de 15 enseignants, 100 étudiants, 50 parents
+- Création de 23 classes (primaire, collège, lycée)
+- Génération de 183 matières avec attribution aux classes
+- 100 inscriptions d'étudiants dans les classes
+- Scripts utilitaires : clear_data.py, reset_db.py
+- Makefile avec commandes pour seed, clear, reset
+- Tests réussis : API fonctionnelle et authentification OK
+```
+
+**Fichiers ajoutés :**
+- `backend/requirements.txt` : Ajout de faker==20.1.0
+- `backend/app/seed_data.py` : Script principal de génération
+- `backend/app/clear_data.py` : Script de nettoyage
+- `backend/reset_db.py` : Script de réinitialisation
+- `backend/seed.py` : Script d'exécution
+- `Makefile` : Commandes automatisées
+
+**Impact :** Base de données peuplée avec des données réalistes pour le développement et les tests
+
 ### [30e6b75] - Fix: Correction de la configuration CORS pour allowed_origins
 ```
 - Changement de List[str] vers str avec parsing manuel
-- Ajout de la propriété allowed_origins_list pour la compatibilité  
+- Ajout de la propriété allowed_origins_list pour la compatibilité
 - Correction de l'erreur JSON parsing dans pydantic_settings
 ```
 
@@ -147,7 +198,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fichiers créés
 - Modèles : 6 fichiers
-- Schémas : 5 fichiers  
+- Schémas : 5 fichiers
 - Routeurs : 5 fichiers
 - Configuration : 4 fichiers
 - Docker : 2 fichiers
