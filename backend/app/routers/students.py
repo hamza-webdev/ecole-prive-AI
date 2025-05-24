@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response # Added Response
 from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models.student import Student
@@ -9,6 +9,12 @@ from ..auth import get_current_active_user
 
 router = APIRouter()
 
+# --- Utility Dependency ---
+def get_student_or_404(student_id: int, db: Session = Depends(get_db)) -> Student:
+    student = db.query(Student).filter(Student.id == student_id).first()
+    if not student:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Étudiant non trouvé")
+    return student
 
 @router.post("/", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 def create_student(
@@ -52,49 +58,44 @@ def read_students(
 
 @router.get("/{student_id}", response_model=StudentResponse)
 def read_student(
-    student_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    student: Student = Depends(get_student_or_404),
+    current_user: User = Depends(get_current_active_user) # Keep for auth, db is in get_student_or_404
 ):
     """Obtenir un étudiant par son ID."""
-    student = db.query(Student).filter(Student.id == student_id).first()
-    if student is None:
-        raise HTTPException(status_code=404, detail="Étudiant non trouvé")
+    # student_id is implicitly handled by Depends(get_student_or_404)
+    # db session is also handled by the dependency
     return student
 
 
 @router.put("/{student_id}", response_model=StudentResponse)
 def update_student(
-    student_id: int,
-    student_update: StudentUpdate,
-    db: Session = Depends(get_db),
+    student_update: StudentUpdate, # student_id is implicit now
+    student: Student = Depends(get_student_or_404),
+    db: Session = Depends(get_db), # Still need db for commit
     current_user: User = Depends(get_current_active_user)
 ):
     """Mettre à jour un étudiant."""
-    db_student = db.query(Student).filter(Student.id == student_id).first()
-    if db_student is None:
-        raise HTTPException(status_code=404, detail="Étudiant non trouvé")
+    # student object is already fetched by get_student_or_404
     
     # Mettre à jour les champs fournis
     for field, value in student_update.dict(exclude_unset=True).items():
-        setattr(db_student, field, value)
+        setattr(student, field, value) # Use student from dependency
     
+    db.add(student) # Add to session before commit if changes were made
     db.commit()
-    db.refresh(db_student)
-    return db_student
+    db.refresh(student)
+    return student
 
 
-@router.delete("/{student_id}")
+@router.delete("/{student_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_student(
-    student_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    student: Student = Depends(get_student_or_404), # student_id is implicit
+    db: Session = Depends(get_db), # Still need db for commit
+    current_user: User = Depends(get_current_active_user) # Keep this for auth
 ):
     """Supprimer un étudiant."""
-    db_student = db.query(Student).filter(Student.id == student_id).first()
-    if db_student is None:
-        raise HTTPException(status_code=404, detail="Étudiant non trouvé")
+    # student object is already fetched by get_student_or_404
     
-    db.delete(db_student)
+    db.delete(student) # Use student from dependency
     db.commit()
-    return {"message": "Étudiant supprimé avec succès"}
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
