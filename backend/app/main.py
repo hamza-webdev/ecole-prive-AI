@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
-from .database import engine
-from .models import Base
+from .database import engine, Base
 from .routers import auth, users, students, teachers, classes, subjects
+
+# Importer tous les modèles pour que SQLAlchemy puisse créer les tables
+from .models import user, student, teacher, classe, subject, enrollment
 
 # Créer les tables
 Base.metadata.create_all(bind=engine)
