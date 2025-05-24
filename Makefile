@@ -49,6 +49,12 @@ shell: ## Accéder au shell du conteneur backend
 db-shell: ## Accéder au shell PostgreSQL
 	$(DOCKER_COMPOSE) exec postgres psql -U ecole_user -d ecole_db
 
+pgadmin: ## Démarrer pgAdmin (interface web)
+	$(DOCKER_COMPOSE) up -d pgadmin
+	@echo "pgAdmin disponible sur: http://localhost:5050"
+	@echo "Email: admin@ecole-prive.fr"
+	@echo "Mot de passe: admin123"
+
 # Tests
 test: ## Lancer les tests (à implémenter)
 	$(DOCKER_COMPOSE) exec backend pytest
