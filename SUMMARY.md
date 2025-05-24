@@ -8,6 +8,8 @@ Création d'une application web complète pour la gestion d'une école privée a
 - ✅ Conteneurisation Docker
 - ✅ Documentation complète
 - ✅ Processus de développement établi
+- ✅ Système de données fictives avec Faker
+- ✅ Scripts d'automatisation (Makefile)
 
 ## 🏗️ Architecture implémentée
 
@@ -90,11 +92,13 @@ Création d'une application web complète pour la gestion d'une école privée a
 ## 📊 Métriques du projet
 
 ### Code produit
-- **~1500 lignes** de code Python backend
+- **~2000 lignes** de code Python backend
 - **6 modèles** de données SQLAlchemy
 - **5 routeurs** API avec endpoints complets
 - **25+ endpoints** REST documentés
-- **4 fichiers** de documentation
+- **5 fichiers** de documentation
+- **4 scripts** de gestion de données (seed, clear, reset)
+- **1 Makefile** avec 15+ commandes automatisées
 
 ### Commits réalisés
 - **3 commits** principaux avec messages descriptifs
@@ -115,6 +119,9 @@ Création d'une application web complète pour la gestion d'une école privée a
 - API REST complète et documentée
 - Conteneurisation Docker fonctionnelle
 - Documentation technique complète
+- Système de données fictives avec Faker
+- Scripts d'automatisation (Makefile)
+- Base de données peuplée avec 366 entités
 
 ### 🔧 En cours de finalisation
 - Résolution des derniers imports de modèles
