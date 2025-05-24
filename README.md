@@ -125,6 +125,7 @@ ecole-prive-AI/
 | 🔗 API Backend | http://localhost:8000 | API REST FastAPI |
 | 📚 Documentation | http://localhost:8000/docs | Swagger UI |
 | 🗄️ Base de données | localhost:5432 | PostgreSQL |
+| 🖥️ pgAdmin | http://localhost:5050 | Interface web PostgreSQL |
 | 🎨 Frontend | http://localhost:4200 | Angular (à venir) |
 
 ## 🎭 Données fictives générées
@@ -223,6 +224,17 @@ make reset
 make install
 ```
 
+### Interface pgAdmin
+```bash
+# Démarrer pgAdmin
+make pgadmin
+
+# Accéder à l'interface web
+# URL: http://localhost:5050
+# Email: admin@ecole-prive.fr
+# Mot de passe: admin123
+```
+
 ### Makefile - Commandes disponibles
 ```bash
 # Afficher l'aide
@@ -261,6 +273,7 @@ ng test
 
 - 📖 [**Documentation technique**](./DOCUMENTATION.md) - Architecture et implémentation
 - 📝 [**Guide développeur**](./DEVELOPMENT_GUIDE.md) - Instructions pour contribuer
+- 🗄️ [**Guide d'accès aux données**](./DATABASE_ACCESS_GUIDE.md) - pgAdmin et PostgreSQL
 - 📋 [**Changelog**](./CHANGELOG.md) - Historique des modifications
 - 🔗 [**API Documentation**](http://localhost:8000/docs) - Swagger UI en direct
 
