@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: ecole_postgres
+    environment:
+      POSTGRES_DB: ecole_db
+      POSTGRES_USER: ecole_user
+      POSTGRES_PASSWORD: ecole_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ecole_network
+
+  # Backend FastAPI
+  backend:
+    build: ./backend
+    container_name: ecole_backend
+    environment:
+      DATABASE_URL: postgresql://ecole_user:ecole_password@postgres:5432/ecole_db
+      SECRET_KEY: your-secret-key-change-this-in-production
+      ALLOWED_ORIGINS: http://localhost:4200,http://localhost:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+    networks:
+      - ecole_network
+
+  # Frontend Angular (sera ajouté plus tard)
+  # frontend:
+  #   build: ./frontend
+  #   container_name: ecole_frontend
+  #   ports:
+  #     - "4200:4200"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - ecole_network
+
+volumes:
+  postgres_data:
+
+networks:
+  ecole_network:
+    driver: bridge
